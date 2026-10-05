@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Роман Замировский, фотограф. Предметная, коммерческая и автосъёмка.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Замировский Фото</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: контактный лист. Страница как лист фотобумаги, кадры пронумерованы сквозной нумерацией, красный только у номеров кадров. */
+:root{
+  --paper:#ECEDE8;
+  --ink:#141512;
+  --mute:#676A62;
+  --line:#C6C8C0;
+  --strip:#1A1B18;
+  --safe:#B0281F;
+  --display:"Fira Sans Extra Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gut:clamp(16px,4vw,48px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121310;--ink:#E7E8E2;--mute:#8E9188;--line:#2D2F2A;--strip:#060705;--safe:#E2483C;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121310;--ink:#E7E8E2;--mute:#8E9188;--line:#2D2F2A;--strip:#060705;--safe:#E2483C;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{overflow-x:clip;background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--body);margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--safe);outline-offset:3px}
+.wrap{padding-inline:var(--gut);max-width:1440px;margin-inline:auto}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+
+/* шапка */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px;flex-wrap:wrap}
+.logo{font:800 22px/1 var(--display);text-transform:uppercase;letter-spacing:.01em;text-decoration:none}
+.logo span{color:var(--safe)}
+.nav{display:flex;gap:18px;flex-wrap:wrap}
+.nav a{text-decoration:none;color:var(--mute)}
+.nav a:hover,.nav a.on{color:var(--ink)}
+
+/* первый экран */
+.hero{padding-block:clamp(28px,6vw,72px) 0}
+.hero h1{font:800 clamp(40px,11vw,160px)/.84 var(--display);text-transform:uppercase;margin:0;letter-spacing:-.01em}
+.hero h1 .l2{display:block;padding-left:clamp(0px,6vw,96px)}
+.hero-meta{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:28px;align-items:end}
+.hero-meta p{margin:0;max-width:34ch;font-size:clamp(17px,1.6vw,20px);line-height:1.45}
+.hero-meta .mono{color:var(--mute)}
+
+/* разделы */
+section{padding-block:clamp(48px,8vw,104px) 0;scroll-margin-top:60px}
+.sec-head{display:grid;grid-template-columns:1fr auto;gap:8px 24px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:12px}
+.sec-head h2{font:800 clamp(44px,8vw,112px)/.85 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+.sec-head .mono{color:var(--mute);text-align:right}
+.sec-lead{max-width:60ch;color:var(--mute);margin:16px 0 0}
+
+/* коллаж: кадры встык, ширина каждого пропорциональна его формату, поэтому высоты в ряду совпадают без обрезки */
+.collage{width:100vw;margin-left:calc(50% - 50vw);margin-top:clamp(20px,3vw,36px)}
+/* карусель: лента кадров встык, едет сама, на наведении стоит */
+.marquee{overflow:hidden;margin-top:clamp(28px,5vw,56px);background:var(--strip)}
+.track{display:flex;width:max-content;animation:roll var(--dur,120s) linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track figure{margin:0;flex:none;cursor:zoom-in}
+.marquee .track img{display:block;height:clamp(220px,36vw,520px);width:auto;max-width:none}
+@keyframes roll{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee{overflow-x:auto}.track{animation:none}}
+.crow{display:flex}
+.frame{flex:var(--ar) 1 0;min-width:0;margin:0;overflow:hidden;cursor:zoom-in}
+.frame img{display:block;width:100%;height:auto;transition:transform .6s ease}
+.frame:hover img{transform:scale(1.025)}
+@media (prefers-reduced-motion:reduce){.frame img{transition:none}.frame:hover img{transform:none}}
+.crow.feature{display:grid}
+.crow.feature .frame{flex:none}
+.crow.feature>.frame img{height:100%;object-fit:cover}
+.crow.feature .side{display:flex;flex-direction:column;min-width:0}
+.crow.small{width:min(100%,920px);margin-inline:auto}
+.crow.narrow{justify-content:center}
+.crow.narrow .frame{flex:0 1 auto;width:min(100%,88vh)}
+.proj{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:clamp(36px,5vw,64px);padding-bottom:8px;border-bottom:1px solid var(--line)}
+.proj:first-child{margin-top:clamp(24px,3vw,36px)}
+.proj h3{margin:0;font:600 clamp(22px,2.4vw,32px)/1 var(--display);text-transform:uppercase;letter-spacing:.01em}
+.proj .mono{color:var(--mute)}
+.proj + .collage{margin-top:14px}
+@media (max-width:640px){.crow{flex-wrap:wrap}.crow.three .frame:first-child{flex-basis:100%}.crow.three .frame:not(:first-child){flex-basis:1px}}
+
+/* обо мне */
+.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,72px);margin-top:28px}
+@media (max-width:820px){.about{grid-template-columns:1fr}}
+.me{aspect-ratio:4/5;max-width:100%;background:var(--strip);position:relative;overflow:hidden;display:flex;align-items:end;padding:18px}
+.me .ini{font:800 clamp(120px,22vw,260px)/.8 var(--display);color:#ECEDE8;opacity:.92;text-transform:uppercase}
+.me .tag{position:absolute;top:16px;left:18px;color:#9A9D94;font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.me img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.about-text p{margin:0 0 18px;max-width:62ch;font-size:clamp(16px,1.25vw,18px)}
+.about-text p:first-child{font-size:clamp(20px,2vw,26px);line-height:1.35;font-weight:500}
+.kit{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 32px;margin-top:32px;border-top:1px solid var(--line)}
+.kit div{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kit dt{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-top:3px}
+.kit dd{margin:0}
+
+/* контакты */
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 32px;margin-top:28px}
+.c{border-top:1px solid var(--ink);padding:14px 0 26px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.c .mono{color:var(--mute)}
+.c .val{font:600 clamp(22px,2.4vw,34px)/1.1 var(--display);overflow-wrap:anywhere;user-select:all}
+.c .val a{text-decoration:none}
+.c button{align-self:start;font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;background:none;color:var(--ink);border:1px solid var(--line);padding:9px 12px;cursor:pointer}
+.c button:hover{border-color:var(--ink)}
+footer{padding-block:56px 40px;color:var(--mute);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* просмотр кадра */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(8,9,7,.94);display:grid;grid-template-rows:1fr auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:100%;margin:auto;object-fit:contain;min-height:0}
+.lb-stage{min-height:0;display:flex}
+.lb-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#C9CBC4;font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding-top:12px;flex-wrap:wrap}
+.lb-bar b{color:#E2483C;font-weight:500;margin-right:10px}
+.lb-btns{display:flex;gap:8px}
+.lb button{background:none;border:1px solid #3A3C37;color:#ECEDE8;font:500 12px/1 var(--mono);padding:10px 14px;cursor:pointer;letter-spacing:.06em}
+.lb button:hover{border-color:#ECEDE8}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">Замировский<span>.</span>фото</a>
+    <nav class="nav mono" aria-label="Разделы">
+      <a href="#predmetka">Предметка</a>
+      <a href="#kommerciya">Коммерция</a>
+      <a href="#avto">Авто</a>
+      <a href="#lyudi">Люди</a>
+      <a href="#about">Обо мне</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero wrap">
+    <h1>Роман<span class="l2">Замировский</span></h1>
+    <div class="hero-meta">
+      <p>Фотограф. Предметная, коммерческая и автосъёмка.</p>
+      <span class="mono">Ярославская область</span>
+    </div>
+  </div>
+
+  <div class="marquee" aria-label="Избранные кадры"><div class="track" id="track"></div></div>
+
+  <section id="predmetka" class="wrap">
+    <div class="sec-head"><h2>Предметка</h2><span class="mono" data-count="predmetka"></span></div>
+    <p class="sec-lead">Ювелирные изделия и серебро «Ростовской финифти». Свет, съёмка и ретушь мои. Фабрика использует эти кадры в печатной рекламе.</p>
+    <div data-rows="predmetka"></div>
+  </section>
+
+  <section id="kommerciya" class="wrap">
+    <div class="sec-head"><h2>Коммерция</h2><span class="mono" data-count="kommerciya"></span></div>
+    <p class="sec-lead">Табачная фабрика «Гулбахар Рус». Снимал территорию и корпуса для закрытого печатного журнала компании.</p>
+    <div data-rows="kommerciya"></div>
+  </section>
+
+  <section id="avto" class="wrap">
+    <div class="sec-head"><h2>Авто</h2><span class="mono" data-count="avto"></span></div>
+    <p class="sec-lead">Тюнинг, классика и ралли. Снимаю и в статике, и в движении.</p>
+    <div data-rows="avto"></div>
+  </section>
+
+  <section id="lyudi" class="wrap">
+    <div class="sec-head"><h2>Люди</h2><span class="mono" data-count="lyudi"></span></div>
+    <div class="collage" data-rows="lyudi"></div>
+  </section>
+
+  <section id="about" class="wrap">
+    <div class="sec-head"><h2>Обо мне</h2><span class="mono">фотограф и дизайнер</span></div>
+    <div class="about">
+      <div class="me" id="me">
+        <span class="tag">РОМАН ЗАМИРОВСКИЙ</span>
+        <span class="ini">РЗ</span>
+      </div>
+      <div class="about-text">
+        <p>Я Роман, фотограф и графический дизайнер. Больше всего люблю предметную съёмку, где всё решает свет.</p>
+        <p>Полтора года снимал продукцию «Ростовской финифти»: ювелирные украшения, иконы, клинки, наборы с эмалью. Сам ставил свет, снимал и делал ретушь. Фабрика до сих пор использует эти фотографии в печатной рекламе.</p>
+        <p>Отдельно снимаю мероприятия, ралли и спорт. Работал с моделями.</p>
+        <p>Дизайнерский опыт помогает в съёмке. Ещё на площадке думаю, как кадр ляжет в макет: где будет текст, какой нужен фон и сколько оставить места по краям.</p>
+        <dl class="kit">
+          <div><dt>Камера</dt><dd>Canon EOS R50</dd></div>
+          <div><dt>Объективы</dt><dd>50 мм, 18-45 мм, 75-300 мм</dd></div>
+          <div><dt>Свет</dt><dd>Импульсный и постоянный, штатив</dd></div>
+          <div><dt>Обработка</dt><dd>Lightroom, Photoshop</dd></div>
+          <div><dt>Видео</dt><dd>Съёмка и монтаж</dd></div>
+          <div><dt>Формат</dt><dd>Штат или проекты, переезд при оффере</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacts" class="wrap">
+    <div class="sec-head"><h2>Контакты</h2><span class="mono">отвечаю в течение дня</span></div>
+    <div class="contacts">
+      <div class="c"><span class="mono">Телефон</span><span class="val" id="v-phone">+7 908 028-41-66</span><button type="button" data-copy="v-phone">Скопировать</button></div>
+      <div class="c"><span class="mono">Почта</span><span class="val" id="v-mail">zamirovsky.roman@yandex.ru</span><button type="button" data-copy="v-mail">Скопировать</button></div>
+      <div class="c"><span class="mono">Telegram</span><span class="val"><a href="https://t.me/RomanPHDG" target="_blank" rel="noopener">@RomanPHDG</a></span></div>
+    </div>
+  </section>
+
+  <footer class="wrap mono"><span>© 2026 Роман Замировский</span><span id="total"></span></footer>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Просмотр кадра">
+  <div class="lb-stage"><img id="lb-img" alt=""></div>
+  <div class="lb-bar">
+    <span id="lb-n"></span>
+    <span class="lb-btns">
+      <button type="button" id="lb-prev">← Назад</button>
+      <button type="button" id="lb-next">Вперёд →</button>
+      <button type="button" id="lb-x">Закрыть</button>
+    </span>
+  </div>
+</div>
+
+<script>
+const PHOTOS=[
+ {f:"jw-necklace",ar:.667,t:"Колье с финифтью и филигранью"},
+ {f:"jw-rowan",ar:1.501,t:"Гарнитур «Рябина»"},
+ {f:"jw-fan",ar:1.02,t:"Подвеска с росписью"},
+ {f:"jw-cosmos",ar:1.5,t:"Гарнитур «Космос»"},
+ {f:"jw-dragonfly",ar:1.5,t:"Брошь «Стрекоза»"},
+ {f:"jw-leaves",ar:1.0,t:"Подвеска и серьги с росписью «Листья»"},
+ {f:"tea-front",ar:1.42,t:"Чайный набор, серебро и эмаль"},
+ {f:"tea-top",ar:1.218,t:"Чайный набор сверху"},
+ {f:"tea-detail",ar:.684,t:"Чайник, деталь"},
+ {f:"finift-set",ar:1.476,t:"Блюдо и стопки, серебро и эмаль"},
+ {f:"gb-road",ar:1.5,t:"Гулбахар Рус, территория"},
+ {f:"gb-truck",ar:1.5,t:"Гулбахар Рус, склад и погрузка"},
+ {f:"gb-chimney",ar:1.5,t:"Гулбахар Рус, производственный корпус"},
+ {f:"gb-long",ar:1.354,t:"Гулбахар Рус, вдоль корпуса"},
+ {f:"gb-grass",ar:1.5,t:"Гулбахар Рус, административный корпус"},
+ {f:"mustang-side",ar:1.78,t:"Ford Mustang"},
+ {f:"mustang-wheel",ar:1.78,t:"Ford Mustang, колесо"},
+ {f:"mustang-engine",ar:1.78,t:"Ford Mustang, подкапотное"},
+ {f:"retro-front",ar:1.78,t:"ВАЗ-2106, зона ретро"},
+ {f:"retro-lights",ar:.562,t:"ВАЗ-2106, фары"},
+ {f:"retro-low",ar:.562,t:"ВАЗ-2106, нижний ракурс"},
+ {f:"retro-radio",ar:.562,t:"Магнитофон VEF Sigma"},
+ {f:"lincoln",ar:1.78,t:"Lincoln"},
+ {f:"rally-vaz",ar:1.5,t:"Ралли, ВАЗ в прыжке"},
+ {f:"rally-team44",ar:1.555,t:"Ралли, Lada Samara в прыжке"},
+ {f:"rally-subaru",ar:1,t:"Ралли, Subaru Impreza"},
+ {f:"rally-mitsu",ar:1,t:"Зимнее ралли, Mitsubishi Lancer"},
+ {f:"portrait-book",ar:.619,t:"Постановочный портрет в библиотеке"},
+ {f:"portrait-cart",ar:.667,t:"Портрет"},
+ {f:"portrait-street",ar:.667,t:"Портрет на улице"},
+ {f:"portrait-bw",ar:1.5,t:"Чёрно-белый портрет"}
+];
+const ROWS={
+ predmetka:[
+  {t:"Украшения",rows:[{feature:"jw-necklace",side:["jw-rowan","jw-fan"]},{feature:"jw-leaves",side:["jw-cosmos","jw-dragonfly"],rev:1}]},
+  {t:"Чайный набор",rows:[["tea-front"],["tea-top","tea-detail"]]},
+  {t:"Эмаль и роспись",rows:[["finift-set"]]}
+ ],
+ avto:[
+  {t:"Ford Mustang",rows:[["mustang-side"],["mustang-wheel","mustang-engine"]]},
+  {t:"ВАЗ-2106 · зона ретро",rows:[["retro-front"],["retro-lights","retro-low","retro-radio"]]},
+  {t:"Lincoln",rows:[["lincoln"]]},
+  {t:"Ралли",rows:[["rally-vaz"],["rally-team44","rally-subaru","rally-mitsu"]]}
+ ],
+ kommerciya:[
+  {t:"Гулбахар Рус · производство",rows:[["gb-road"],["gb-truck","gb-chimney"],["gb-long","gb-grass"]]}
+ ],
+ lyudi:[["portrait-book","portrait-cart","portrait-street","portrait-bw"]]
+};
+const word=n=>{const a=n%10,b=n%100;return (a===1&&b!==11)?"кадр":(a>=2&&a<=4&&(b<12||b>14))?"кадра":"кадров"};
+const idx=f=>PHOTOS.findIndex(p=>p.f===f);
+const one=(f,eager)=>{const i=idx(f),p=PHOTOS[i];return `<figure class="frame" style="--ar:${p.ar}" data-i="${i}" tabindex="0"><img src="img/${f}.jpg" alt="${p.t}"${eager?"":` loading="lazy"`} width="1600" height="${Math.round(1600/p.ar)}"></figure>`};
+const flatRow=x=>Array.isArray(x)?x:x.r?x.r:[x.feature,...x.side];
+const rowsHTML=(rows,eager)=>rows.map(row=>{
+  if(row.feature){const fa=PHOTOS[idx(row.feature)].ar,sum=row.side.reduce((a,f)=>a+1/PHOTOS[idx(f)].ar,0);
+    const k=(fa*sum).toFixed(3),side=`<div class="side">${row.side.map(f=>one(f)).join("")}</div>`;
+    return row.rev?`<div class="crow feature" style="grid-template-columns:1fr ${k}fr">${side}${one(row.feature)}</div>`:`<div class="crow feature" style="grid-template-columns:${k}fr 1fr">${one(row.feature)}${side}</div>`;}
+  const r=Array.isArray(row)?row:row.r;return `<div class="crow${r.length>2?" three":""}${row.small?" small":""}${r.length===1&&PHOTOS[idx(r[0])].ar<1.3?" narrow":""}">`+r.map(f=>{const i=idx(f),p=PHOTOS[i];
+  return `<figure class="frame" style="--ar:${p.ar}" data-i="${i}" tabindex="0"><img src="img/${f}.jpg" alt="${p.t}"${eager?"":` loading="lazy"`} width="1600" height="${Math.round(1600/p.ar)}"></figure>`}).join("")+`</div>`}).join("");
+document.querySelectorAll("[data-rows]").forEach(box=>{
+  const key=box.dataset.rows,data=ROWS[key];let n=0;
+  if(data[0].t){
+    box.innerHTML=data.map(g=>{const c=g.rows.map(flatRow).flat().length;n+=c;return `<div class="proj"><h3>${g.t}</h3><span class="mono">${c} ${word(c)}</span></div><div class="collage">${rowsHTML(g.rows)}</div>`}).join("");
+  }else{box.classList.add("collage");box.innerHTML=rowsHTML(data,key==="hero");n=data.flat().length;}
+  const cnt=document.querySelector(`[data-count="${key}"]`);
+  if(cnt)cnt.textContent=`${n} ${word(n)}`;
+});
+{const order=["predmetka","kommerciya","avto"].flatMap(k=>ROWS[k].flatMap(g=>g.rows.map(flatRow).flat()));
+ const h=420,w=order.reduce((a,f)=>a+PHOTOS[idx(f)].ar*h,0);
+ const fig=(f,dup)=>{const i=idx(f),p=PHOTOS[i];return `<figure class="frame" data-i="${i}"${dup?' aria-hidden="true"':' tabindex="0"'}><img src="img/${f}.jpg" alt="${dup?"":p.t}" width="${Math.round(1600)}" height="${Math.round(1600/p.ar)}"></figure>`};
+ const tr=document.getElementById("track");tr.innerHTML=order.map(f=>fig(f)).join("")+order.map(f=>fig(f,1)).join("");
+ tr.style.setProperty("--dur",Math.round(w/70)+"s");}
+document.getElementById("total").textContent=`${PHOTOS.length} ${word(PHOTOS.length)}`;
+
+/* просмотр */
+const lb=document.getElementById("lb"),im=document.getElementById("lb-img");
+let cur=0,last=null;
+function show(i){cur=(i+PHOTOS.length)%PHOTOS.length;const p=PHOTOS[cur];im.src=`img/${p.f}.jpg`;im.alt=p.t;
+  document.getElementById("lb-n").textContent=`${cur+1} / ${PHOTOS.length}`;}
+function open(i){last=document.activeElement;show(i);lb.hidden=false;document.body.style.overflow="hidden";document.getElementById("lb-x").focus();}
+function close(){lb.hidden=true;document.body.style.overflow="";if(last)last.focus();}
+document.addEventListener("click",e=>{const f=e.target.closest("[data-i]");if(f&&!f.closest(".lb"))open(+f.dataset.i);});
+document.addEventListener("keydown",e=>{
+  if(lb.hidden){const f=e.target.closest&&e.target.closest(".frame");if(f&&(e.key==="Enter"||e.key===" ")){e.preventDefault();open(+f.dataset.i);}return;}
+  if(e.key==="Escape")close();if(e.key==="ArrowRight")show(cur+1);if(e.key==="ArrowLeft")show(cur-1);});
+document.getElementById("lb-x").onclick=close;
+document.getElementById("lb-next").onclick=()=>show(cur+1);
+document.getElementById("lb-prev").onclick=()=>show(cur-1);
+lb.addEventListener("click",e=>{if(e.target===lb||e.target.classList.contains("lb-stage"))close();});
+
+/* копирование */
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>{
+  const el=document.getElementById(b.dataset.copy),txt=el.textContent.trim();
+  const done=()=>{b.textContent="Скопировано";setTimeout(()=>b.textContent="Скопировать",1600)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Выделено, нажми Ctrl+C"};
+  try{navigator.clipboard.writeText(txt).then(done,sel)}catch(_){sel()}
+}));
+
+/* подсветка раздела в меню */
+const links=[...document.querySelectorAll(".nav a")];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
+document.querySelectorAll("section[id]").forEach(s=>io.observe(s));
+</script>
+
+</body>
+</html>
