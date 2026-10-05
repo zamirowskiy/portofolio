@@ -1,0 +1,187 @@
+{
+ "rev": "2026-10-05T00:00:00.000Z",
+ "meta": {
+  "title": "Замировский Фото",
+  "description": "Роман Замировский, фотограф. Предметная, коммерческая и автосъёмка."
+ },
+ "logo": ["Замировский", "фото"],
+ "hero": {
+  "line1": "Роман",
+  "line2": "Замировский",
+  "text": "Фотограф. Предметная, коммерческая и автосъёмка.",
+  "place": "Ярославская область"
+ },
+ "sections": [
+  {
+   "id": "predmetka",
+   "title": "Предметка",
+   "lead": "Ювелирные изделия и серебро «Ростовской финифти». Свет, съёмка и ретушь мои. Фабрика использует эти кадры в печатной рекламе.",
+   "marquee": true,
+   "groups": [
+    {
+     "title": "Украшения",
+     "rows": [
+      {"type": "feature", "photos": [
+       {"src": "img/jw-necklace.jpg", "ar": 0.667, "alt": "Колье с финифтью и филигранью"},
+       {"src": "img/jw-rowan.jpg", "ar": 1.501, "alt": "Гарнитур «Рябина»"},
+       {"src": "img/jw-fan.jpg", "ar": 1.02, "alt": "Подвеска с росписью"}
+      ]},
+      {"type": "feature-rev", "photos": [
+       {"src": "img/jw-leaves.jpg", "ar": 1.0, "alt": "Подвеска и серьги с росписью «Листья»"},
+       {"src": "img/jw-cosmos.jpg", "ar": 1.5, "alt": "Гарнитур «Космос»"},
+       {"src": "img/jw-dragonfly.jpg", "ar": 1.5, "alt": "Брошь «Стрекоза»"}
+      ]}
+     ]
+    },
+    {
+     "title": "Чайный набор",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/tea-front.jpg", "ar": 1.42, "alt": "Чайный набор, серебро и эмаль"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/tea-top.jpg", "ar": 1.218, "alt": "Чайный набор сверху"},
+       {"src": "img/tea-detail.jpg", "ar": 0.684, "alt": "Чайник, деталь"}
+      ]}
+     ]
+    },
+    {
+     "title": "Эмаль и роспись",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/finift-set.jpg", "ar": 1.476, "alt": "Блюдо и стопки, серебро и эмаль"}
+      ]}
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kommerciya",
+   "title": "Коммерция",
+   "lead": "Табачная фабрика «Гулбахар Рус». Снимал территорию и корпуса для закрытого печатного журнала компании.",
+   "marquee": true,
+   "groups": [
+    {
+     "title": "Гулбахар Рус · производство",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/gb-road.jpg", "ar": 1.5, "alt": "Гулбахар Рус, территория"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/gb-truck.jpg", "ar": 1.5, "alt": "Гулбахар Рус, склад и погрузка"},
+       {"src": "img/gb-chimney.jpg", "ar": 1.5, "alt": "Гулбахар Рус, производственный корпус"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/gb-long.jpg", "ar": 1.354, "alt": "Гулбахар Рус, вдоль корпуса"},
+       {"src": "img/gb-grass.jpg", "ar": 1.5, "alt": "Гулбахар Рус, административный корпус"}
+      ]}
+     ]
+    }
+   ]
+  },
+  {
+   "id": "avto",
+   "title": "Авто",
+   "lead": "Тюнинг, классика и ралли. Снимаю и в статике, и в движении.",
+   "marquee": true,
+   "groups": [
+    {
+     "title": "Ford Mustang",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/mustang-side.jpg", "ar": 1.78, "alt": "Ford Mustang"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/mustang-wheel.jpg", "ar": 1.78, "alt": "Ford Mustang, колесо"},
+       {"src": "img/mustang-engine.jpg", "ar": 1.78, "alt": "Ford Mustang, подкапотное"}
+      ]}
+     ]
+    },
+    {
+     "title": "ВАЗ-2106 · зона ретро",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/retro-front.jpg", "ar": 1.78, "alt": "ВАЗ-2106, зона ретро"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/retro-lights.jpg", "ar": 0.562, "alt": "ВАЗ-2106, фары"},
+       {"src": "img/retro-low.jpg", "ar": 0.562, "alt": "ВАЗ-2106, нижний ракурс"},
+       {"src": "img/retro-radio.jpg", "ar": 0.562, "alt": "Магнитофон VEF Sigma"}
+      ]}
+     ]
+    },
+    {
+     "title": "Lincoln",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/lincoln.jpg", "ar": 1.78, "alt": "Lincoln"}
+      ]}
+     ]
+    },
+    {
+     "title": "Ралли",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/rally-vaz.jpg", "ar": 1.5, "alt": "Ралли, ВАЗ в прыжке"}
+      ]},
+      {"type": "row", "photos": [
+       {"src": "img/rally-team44.jpg", "ar": 1.555, "alt": "Ралли, Lada Samara в прыжке"},
+       {"src": "img/rally-subaru.jpg", "ar": 1, "alt": "Ралли, Subaru Impreza"},
+       {"src": "img/rally-mitsu.jpg", "ar": 1, "alt": "Зимнее ралли, Mitsubishi Lancer"}
+      ]}
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lyudi",
+   "title": "Люди",
+   "lead": "",
+   "marquee": false,
+   "groups": [
+    {
+     "title": "",
+     "rows": [
+      {"type": "row", "photos": [
+       {"src": "img/portrait-book.jpg", "ar": 0.619, "alt": "Постановочный портрет в библиотеке"},
+       {"src": "img/portrait-cart.jpg", "ar": 0.667, "alt": "Портрет"},
+       {"src": "img/portrait-street.jpg", "ar": 0.667, "alt": "Портрет на улице"},
+       {"src": "img/portrait-bw.jpg", "ar": 1.5, "alt": "Чёрно-белый портрет"}
+      ]}
+     ]
+    }
+   ]
+  }
+ ],
+ "about": {
+  "title": "Обо мне",
+  "note": "фотограф и дизайнер",
+  "photo": "",
+  "initials": "РЗ",
+  "tag": "РОМАН ЗАМИРОВСКИЙ",
+  "paragraphs": [
+   "Я Роман, фотограф и графический дизайнер. Больше всего люблю предметную съёмку, где всё решает свет.",
+   "Полтора года снимал продукцию «Ростовской финифти»: ювелирные украшения, иконы, клинки, наборы с эмалью. Сам ставил свет, снимал и делал ретушь. Фабрика до сих пор использует эти фотографии в печатной рекламе.",
+   "Отдельно снимаю мероприятия, ралли и спорт. Работал с моделями.",
+   "Дизайнерский опыт помогает в съёмке. Ещё на площадке думаю, как кадр ляжет в макет: где будет текст, какой нужен фон и сколько оставить места по краям."
+  ],
+  "kit": [
+   {"k": "Камера", "v": "Canon EOS R50"},
+   {"k": "Объективы", "v": "50 мм, 18-45 мм, 75-300 мм"},
+   {"k": "Свет", "v": "Импульсный и постоянный, штатив"},
+   {"k": "Обработка", "v": "Lightroom, Photoshop"},
+   {"k": "Видео", "v": "Съёмка и монтаж"},
+   {"k": "Формат", "v": "Штат или проекты, переезд при оффере"}
+  ]
+ },
+ "contacts": {
+  "title": "Контакты",
+  "note": "отвечаю в течение дня",
+  "items": [
+   {"label": "Телефон", "value": "+7 908 028-41-66", "url": "", "copy": true},
+   {"label": "Почта", "value": "zamirovsky.roman@yandex.ru", "url": "", "copy": true},
+   {"label": "Telegram", "value": "@RomanPHDG", "url": "https://t.me/RomanPHDG", "copy": false}
+  ]
+ },
+ "footer": "© 2026 Роман Замировский"
+}

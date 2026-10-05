@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Админка · Замировский Фото</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Админка сайта: правит content.json и папку img/ в репозитории через GitHub API. */
+:root{
+  --paper:#ECEDE8;--card:#F6F6F3;--ink:#141512;--mute:#676A62;--line:#C6C8C0;--safe:#B0281F;--ok:#2D7A3E;
+  --display:"Fira Sans Extra Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121310;--card:#1B1C19;--ink:#E7E8E2;--mute:#8E9188;--line:#2D2F2A;--safe:#E2483C;--ok:#5DBB70;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121310;--card:#1B1C19;--ink:#E7E8E2;--mute:#8E9188;--line:#2D2F2A;--safe:#E2483C;--ok:#5DBB70;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 var(--body);overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--safe);outline-offset:2px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+button,.btn{font:500 12px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;background:none;color:var(--ink);border:1px solid var(--line);padding:9px 12px;cursor:pointer;border-radius:0;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+button:hover:not(:disabled),.btn:hover{border-color:var(--ink)}
+button:disabled{opacity:.35;cursor:default}
+button.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.danger:hover:not(:disabled){border-color:var(--safe);color:var(--safe)}
+button.add{border-style:dashed;width:100%;justify-content:center;padding:14px}
+button.sm{padding:6px 8px;font-size:11px}
+input,textarea,select{font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);padding:9px 10px;width:100%;border-radius:0}
+textarea{resize:vertical;min-height:44px}
+input:focus,textarea:focus,select:focus{border-color:var(--ink);outline:none}
+
+/* шапка */
+.bar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar-in{display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
+.brand{font:800 20px/1 var(--display);text-transform:uppercase;margin-right:auto}
+.brand span{color:var(--safe)}
+.brand small{font:500 11px var(--mono);color:var(--mute);margin-left:8px;letter-spacing:.06em}
+.st{font-size:13px;color:var(--mute)}
+.st.ok{color:var(--ok)}.st.err{color:var(--safe)}
+.bar .acts{display:flex;gap:8px;flex-wrap:wrap}
+
+/* раскладка */
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 56px)}
+.side{border-right:1px solid var(--line);padding:16px 0;display:flex;flex-direction:column}
+.side a{display:block;padding:9px 16px;text-decoration:none;color:var(--mute);border-left:3px solid transparent}
+.side a:hover{color:var(--ink)}
+.side a.on{color:var(--ink);border-left-color:var(--safe);background:var(--card)}
+.side .grp{padding:14px 16px 4px;color:var(--mute)}
+.side .sp{flex:1}
+.side .out{padding:16px}
+.panel{padding:24px clamp(16px,3vw,40px) 80px;max-width:1100px}
+.panel h2{font:800 clamp(32px,4vw,48px)/.95 var(--display);text-transform:uppercase;margin:0}
+.ph{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:20px}
+.tools{display:inline-flex;gap:6px;flex-wrap:wrap}
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:0}
+  .side a{border-left:0;border-bottom:3px solid transparent;white-space:nowrap;padding:12px 14px}
+  .side a.on{border-bottom-color:var(--safe)}
+  .side .grp,.side .sp{display:none}
+  .side .out{padding:6px 10px}
+}
+
+/* поля */
+.f{display:block;margin-bottom:16px}
+.fl{display:block;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.f small{display:block;color:var(--mute);margin-top:4px;font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+.chk{display:flex;gap:10px;align-items:center;margin-bottom:16px;cursor:pointer}
+.chk input{width:18px;height:18px;margin:0;accent-color:var(--safe)}
+.hint{color:var(--mute);font-size:13px;margin:0 0 16px}
+.warn{color:var(--safe);font-size:13px;margin:8px 0 0}
+
+/* проекты, ряды, кадры */
+.group{border:1px solid var(--line);background:var(--card);padding:16px;margin:24px 0 12px}
+.group-h{display:flex;gap:10px;align-items:end;margin-bottom:12px}
+.group-h .f{flex:1;margin:0}
+.row{border:1px solid var(--line);background:var(--paper);padding:12px;margin-bottom:12px}
+.row-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.row-h .mono{color:var(--mute);margin-right:4px}
+.row-h select{width:auto;padding:6px 8px;font-size:13px}
+.row-h .tools{margin-left:auto}
+.strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;min-height:60px}
+.strip.over{outline:2px dashed var(--safe);outline-offset:4px}
+.card{border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;cursor:grab;position:relative}
+.card.over{box-shadow:-4px 0 0 var(--safe)}
+.card.dragging{opacity:.4}
+.card .th{aspect-ratio:4/3;background:#1A1B18;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card .th img{max-width:100%;max-height:100%;display:block;pointer-events:none}
+.card .badge{position:absolute;top:6px;left:6px;background:var(--safe);color:#fff;font:500 10px var(--mono);padding:3px 6px;letter-spacing:.06em;text-transform:uppercase}
+.card .new{position:absolute;top:6px;right:6px;background:var(--ok);color:#fff;font:500 10px var(--mono);padding:3px 6px;text-transform:uppercase}
+.card textarea{border:0;border-top:1px solid var(--line);font-size:13px;min-height:52px;background:var(--card)}
+.card>.tools{padding:6px;border-top:1px solid var(--line);justify-content:space-between;display:flex;gap:6px}
+.addtile{border:1px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:150px;cursor:pointer;color:var(--mute);text-align:center;padding:12px;font-size:13px}
+.addtile:hover{border-color:var(--ink);color:var(--ink)}
+.addtile b{font:800 34px/1 var(--display)}
+input[type=file]{display:none}
+
+/* списки */
+.li{display:flex;gap:8px;align-items:start;margin-bottom:10px}
+.li>.grow{flex:1;display:grid;gap:8px}
+.li .kv{display:grid;grid-template-columns:160px 1fr;gap:8px}
+@media (max-width:560px){.li{flex-direction:column}.li .kv{grid-template-columns:1fr}}
+.me{display:flex;gap:16px;align-items:start;margin-bottom:20px;flex-wrap:wrap}
+.me .th{width:160px;aspect-ratio:4/5;background:#1A1B18;display:flex;align-items:center;justify-content:center;color:#ECEDE8;font:800 64px var(--display);overflow:hidden}
+.me .th img{width:100%;height:100%;object-fit:cover}
+h3{font:600 22px/1 var(--display);text-transform:uppercase;margin:32px 0 12px}
+
+/* вход */
+.login{max-width:620px;margin:6vh auto;padding:0 16px}
+.login h1{font:800 clamp(40px,8vw,72px)/.9 var(--display);text-transform:uppercase;margin:0 0 20px}
+.login ol{padding-left:20px;margin:0 0 20px}
+.login li{margin-bottom:10px}
+.login .err{color:var(--safe);margin-top:12px}
+.login form{display:flex;gap:8px;flex-wrap:wrap}
+.login form input{flex:1;min-width:220px}
+
+/* предпросмотр */
+.pv{position:fixed;inset:0;z-index:60;background:var(--paper);display:grid;grid-template-rows:auto 1fr}
+.pv[hidden]{display:none}
+.pv-bar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line)}
+.pv-bar .mono{margin-right:auto;color:var(--mute)}
+.pv iframe{width:100%;height:100%;border:0;background:#fff}
+.busy{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;font-size:14px;z-index:70}
+.busy[hidden]{display:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="pv" id="pv" hidden>
+  <div class="pv-bar"><span class="mono">Предпросмотр · ещё не опубликовано</span><button type="button" id="pv-x">Закрыть</button></div>
+  <iframe id="pv-f" title="Предпросмотр сайта"></iframe>
+</div>
+<div class="busy" id="busy" hidden></div>
+
+<script>
+const OWNER="zamirowskiy",REPO="portofolio",BRANCH="main";
+const API=`https://api.github.com/repos/${OWNER}/${REPO}`,RAW=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
+const SITE="./";
+const TOKEN_URL="https://github.com/settings/personal-access-tokens/new?name=%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0&description=admin.html%20%D0%B4%D0%BB%D1%8F%20portofolio&target_name=zamirowskiy&expires_in=none&contents=write";
+
+const app=document.getElementById("app");
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){}}};
+let token=ls.get("zf_token")||"",D=null,page="hero",dirty=false,saving=false,stat={t:"",c:""};
+const local=new Map();   // путь → blob-ссылка для новых фото (превью до публикации)
+const pending=new Map(); // путь → Blob, ещё не залитые фото
+const known=new Set();   // фото, которые уже лежат в репозитории
+const removed=new Set(); // убранные из сайта фото: удалим файл при публикации
+
+/* ---------- мелочи ---------- */
+function h(tag,props,...kids){const el=document.createElement(tag);
+  for(const [k,v] of Object.entries(props||{})){if(v==null||v===false)continue;
+    if(k.startsWith("on"))el.addEventListener(k.slice(2),v);
+    else if(k==="class")el.className=v;else if(k==="style")el.style.cssText=v;
+    else if(k in el)el[k]=v;else el.setAttribute(k,v===true?"":v);}
+  for(const c of kids.flat(Infinity)){if(c==null||c===false)continue;el.append(c instanceof Node?c:String(c))}
+  return el}
+const btn=(label,fn,o={})=>h("button",{type:"button",class:o.cls||"",disabled:!!o.off,title:o.title||null,onclick:fn},label);
+const mv=(a,i,d)=>{const j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]};
+const TR={а:"a",б:"b",в:"v",г:"g",д:"d",е:"e",ё:"e",ж:"zh",з:"z",и:"i",й:"y",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",с:"s",т:"t",у:"u",ф:"f",х:"h",ц:"c",ч:"ch",ш:"sh",щ:"sch",ъ:"",ы:"y",ь:"",э:"e",ю:"yu",я:"ya"};
+const slug=s=>String(s).toLowerCase().split("").map(c=>TR[c]??c).join("").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40);
+const thumb=src=>{const i=h("img",{src:local.get(src)||SITE+src,alt:"",loading:"lazy"});i.addEventListener("error",()=>{if(!i.dataset.raw){i.dataset.raw=1;i.src=RAW+src}},{once:false});return i};
+const allPhotos=()=>D.sections.flatMap(s=>s.groups.flatMap(g=>g.rows.flatMap(r=>r.photos)));
+const usedPaths=()=>new Set([...allPhotos().map(p=>p.src),...(D.about.photo?[D.about.photo]:[])]);
+const drop=src=>{if(src)removed.add(src)};
+const busy=t=>{const b=document.getElementById("busy");b.textContent=t||"";b.hidden=!t};
+
+function status(t,c=""){stat={t,c};const el=document.getElementById("st");if(el){el.textContent=t;el.className="st "+c}}
+function touch(){dirty=true;if(stat.c==="ok")stat={t:"",c:""};bar();schedulePreview()}
+function full(){if(!D)return;renderSide();renderPanel();bar()}
+
+/* ---------- GitHub ---------- */
+async function api(path,opt={}){
+  const r=await fetch(path.startsWith("http")?path:API+path,{cache:"no-store",...opt,headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{}),...(opt.headers||{})}});
+  if(!r.ok){let m="";try{m=(await r.json()).message}catch(_){} const e=new Error(m||r.statusText);e.status=r.status;throw e}
+  return r}
+const toB64=blob=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(blob)});
+
+async function load(){
+  app.replaceChildren(h("p",{class:"login"},"Загружаю содержимое сайта…"));
+  try{
+    const r=await api(`/contents/content.json?ref=${BRANCH}`,{headers:{Accept:"application/vnd.github.raw+json"}});
+    D=JSON.parse(await r.text());
+  }catch(e){
+    if(e.status===401){ls.set("zf_token",null);token="";return loginView("GitHub не принял ключ. Скорее всего, его удалили или срок действия кончился. Создайте новый.")}
+    return loginView("Не получилось загрузить сайт: "+e.message)}
+  known.clear();usedPaths().forEach(p=>known.add(p));
+  shell();
+}
+
+async function save(){
+  if(saving||!dirty)return;saving=true;bar();status("Публикую…");
+  try{
+    const used=usedPaths();
+    const ref=await (await api(`/git/ref/heads/${BRANCH}`)).json(),base=ref.object.sha;
+    const head=await (await api(`/git/commits/${base}`)).json();
+    const tree=[],up=[...pending].filter(([p])=>used.has(p));
+    for(let i=0;i<up.length;i++){const [path,blob]=up[i];
+      status(`Загружаю фото ${i+1} из ${up.length}…`);
+      const b=await (await api("/git/blobs",{method:"POST",body:JSON.stringify({content:await toB64(blob),encoding:"base64"})})).json();
+      tree.push({path,mode:"100644",type:"blob",sha:b.sha});}
+    const del=[...removed].filter(p=>!used.has(p)&&known.has(p));
+    del.forEach(path=>tree.push({path,mode:"100644",type:"blob",sha:null}));
+    status("Сохраняю…");
+    D.rev=new Date().toISOString();
+    tree.push({path:"content.json",mode:"100644",type:"blob",content:JSON.stringify(D,null,1)+"\n"});
+    const t=await (await api("/git/trees",{method:"POST",body:JSON.stringify({base_tree:head.tree.sha,tree})})).json();
+    const c=await (await api("/git/commits",{method:"POST",body:JSON.stringify({message:"Обновление сайта из админки",tree:t.sha,parents:[base]})})).json();
+    await api(`/git/refs/heads/${BRANCH}`,{method:"PATCH",body:JSON.stringify({sha:c.sha})});
+    up.forEach(([p])=>{known.add(p);pending.delete(p)});
+    [...pending.keys()].forEach(p=>{if(!used.has(p))pending.delete(p)});
+    del.forEach(p=>known.delete(p));removed.clear();
+    dirty=false;waitLive(D.rev);
+  }catch(e){
+    const m=e.status===403||e.status===404?"У ключа нет права записи в репозиторий portofolio. Создайте ключ заново и выберите этот репозиторий."
+      :e.status===422||e.status===409?"Сайт успели изменить в другом месте. Обновите страницу и повторите правки."
+      :e.status===401?"GitHub не принял ключ. Нажмите «Выйти» и введите новый.":"Не получилось опубликовать: "+e.message;
+    status(m,"err");
+  }
+  saving=false;bar();
+}
+
+async function waitLive(rev){
+  status("Сохранено. Сайт обновится примерно через минуту…");
+  for(let i=0;i<60;i++){
+    await new Promise(r=>setTimeout(r,5000));
+    if(dirty||saving)return;
+    try{const j=await (await fetch(`${SITE}content.json?t=${Date.now()}`,{cache:"no-store"})).json();
+      if(j.rev===rev){status("Готово, изменения уже на сайте","ok");return}}catch(_){}
+  }
+  status("Сохранено. GitHub выкладывает сайт дольше обычного, проверьте через пару минут.","ok");
+}
+
+/* ---------- фото ---------- */
+async function prep(file){
+  let bmp;
+  try{bmp=await createImageBitmap(file,{imageOrientation:"from-image"})}
+  catch(_){throw new Error(`«${file.name}» не открылся. Подходят JPG, PNG и WebP. Фото с iPhone в HEIC сначала сохраните как JPG.`)}
+  const M=2000,k=Math.min(1,M/Math.max(bmp.width,bmp.height)),w=Math.round(bmp.width*k),hh=Math.round(bmp.height*k);
+  const cv=h("canvas",{width:w,height:hh}),cx=cv.getContext("2d");
+  cx.fillStyle="#fff";cx.fillRect(0,0,w,hh);cx.drawImage(bmp,0,0,w,hh);if(bmp.close)bmp.close();
+  const blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",.86));
+  const path=`img/${slug(file.name.replace(/\.[^.]+$/,""))||"foto"}-${Date.now().toString(36)}${Math.random().toString(36).slice(2,5)}.jpg`;
+  pending.set(path,blob);local.set(path,URL.createObjectURL(blob));
+  return {src:path,ar:+(w/hh).toFixed(3),alt:""};
+}
+async function prepMany(files){
+  files=[...files].filter(f=>f.type.startsWith("image/")||/\.(jpe?g|png|webp|heic)$/i.test(f.name));
+  const out=[],errs=[];
+  for(let i=0;i<files.length;i++){busy(`Готовлю фото ${i+1} из ${files.length}…`);
+    try{out.push(await prep(files[i]))}catch(e){errs.push(e.message)}}
+  busy("");if(errs.length)alert(errs.join("\n"));
+  return out;
+}
+const picker=(multi,fn)=>{const i=h("input",{type:"file",accept:"image/*",multiple:multi,onchange:async()=>{const ps=await prepMany(i.files);i.value="";if(ps.length)fn(ps)}});return i};
+
+/* ---------- каркас ---------- */
+function loginView(err){
+  let inp;
+  app.replaceChildren(h("div",{class:"login"},
+    h("h1",{},"Админка"),
+    h("p",{},"Здесь меняются тексты и фото на сайте. Чтобы админка могла сохранять изменения, ей нужен ключ доступа к GitHub. Ключ создаётся один раз и хранится только в этом браузере."),
+    h("ol",{},
+      h("li",{},"Откройте ",h("a",{href:TOKEN_URL,target:"_blank",rel:"noopener"},"страницу создания ключа на GitHub"),". Название и права там уже заполнены."),
+      h("li",{},"В блоке «Repository access» выберите «Only select repositories», затем репозиторий ",h("b",{},"portofolio"),"."),
+      h("li",{},"Нажмите «Generate token» внизу и скопируйте ключ. Он начинается с ",h("code",{},"github_pat_"),"."),
+      h("li",{},"Вставьте ключ сюда.")),
+    h("form",{onsubmit:e=>{e.preventDefault();const v=inp.value.trim();if(!v)return;token=v;ls.set("zf_token",v);load()}},
+      inp=h("input",{type:"password",placeholder:"github_pat_…",autocomplete:"off"}),
+      h("button",{type:"submit",class:"primary"},"Войти")),
+    err&&h("p",{class:"err"},err)));
+  inp.focus();
+}
+
+function shell(){
+  app.replaceChildren(
+    h("header",{class:"bar"},h("div",{class:"bar-in"},
+      h("div",{class:"brand"},"Замировский",h("span",{},"."),"фото",h("small",{},"админка")),
+      h("span",{class:"st",id:"st"}),
+      h("div",{class:"acts"},
+        btn("Предпросмотр",openPreview),
+        h("a",{class:"btn",href:SITE,target:"_blank",rel:"noopener"},"Сайт ↗"),
+        h("button",{type:"button",class:"primary",id:"pub",onclick:save},"Опубликовать")))),
+    h("div",{class:"layout"},h("nav",{class:"side",id:"side"}),h("div",{class:"panel",id:"panel"})));
+  status(stat.t,stat.c);full();
+}
+function bar(){const b=document.getElementById("pub");if(!b)return;
+  b.disabled=!dirty||saving;b.textContent=saving?"Публикую…":dirty?"Опубликовать":"Всё сохранено";
+  if(dirty&&!saving&&!stat.t)status("Есть неопубликованные изменения")}
+
+function renderSide(){
+  const s=document.getElementById("side");if(!s)return;
+  const link=(label,key)=>h("a",{href:"#",class:page===key?"on":"",onclick:e=>{e.preventDefault();page=key;full();scrollTo(0,0)}},label);
+  s.replaceChildren(
+    link("Первый экран","hero"),
+    h("div",{class:"grp mono"},"Разделы с фото"),
+    ...D.sections.map(x=>link(x.title||"Без названия",x)),
+    h("a",{href:"#",onclick:e=>{e.preventDefault();addSection()}},"+ Новый раздел"),
+    h("div",{class:"grp mono"},"Остальное"),
+    link("Обо мне","about"),link("Контакты","contacts"),link("Подвал и поиск","meta"),
+    h("div",{class:"sp"}),
+    h("div",{class:"out"},btn("Выйти",()=>{if(dirty&&!confirm("Есть неопубликованные изменения. Выйти без них?"))return;ls.set("zf_token",null);token="";dirty=false;loginView()},{cls:"sm",title:"Забыть ключ на этом устройстве"})));
+}
+function renderPanel(){
+  const p=document.getElementById("panel");if(!p)return;
+  const v=page==="hero"?heroView():page==="about"?aboutView():page==="contacts"?contactsView():page==="meta"?metaView():secView(page);
+  p.replaceChildren(...v);
+}
+
+/* ---------- поля ---------- */
+function field(label,obj,key,o={}){
+  const el=h(o.area?"textarea":"input",{value:obj[key]??"",placeholder:o.ph||"",oninput:e=>{obj[key]=e.target.value;touch();if(o.side)renderSide()}});
+  if(o.area)el.rows=o.rows||3;
+  return h("label",{class:"f"},h("span",{class:"fl"},label),el,o.hint&&h("small",{},o.hint));
+}
+function check(label,obj,key){return h("label",{class:"chk"},h("input",{type:"checkbox",checked:!!obj[key],onchange:e=>{obj[key]=e.target.checked;touch()}}),label)}
+const head=(title,...tools)=>h("div",{class:"ph"},h("h2",{},title),tools.length?h("span",{class:"tools"},tools):null);
+const listTools=(arr,i,extra)=>h("span",{class:"tools"},
+  btn("↑",()=>{mv(arr,i,-1);touch();renderPanel()},{cls:"sm",off:i===0,title:"Выше"}),
+  btn("↓",()=>{mv(arr,i,1);touch();renderPanel()},{cls:"sm",off:i===arr.length-1,title:"Ниже"}),
+  btn("✕",()=>{if(extra&&extra()===false)return;arr.splice(i,1);touch();renderPanel()},{cls:"sm danger",title:"Удалить"}));
+
+/* ---------- страницы ---------- */
+function heroView(){const H=D.hero;return [
+  head("Первый экран"),
+  h("div",{class:"two"},field("Логотип, первая часть",D.logo,0),field("Логотип, после точки",D.logo,1)),
+  h("div",{class:"two"},field("Имя, первая строка",H,"line1"),field("Имя, вторая строка",H,"line2")),
+  field("Подзаголовок",H,"text",{area:true,rows:2}),
+  field("Город или регион",H,"place"),
+  h("p",{class:"hint"},"Под этим блоком идёт лента с фото. В неё попадают кадры разделов, где стоит галочка «Показывать в ленте».")]}
+
+function metaView(){return [
+  head("Подвал и поиск"),
+  field("Текст в подвале",D,"footer"),
+  field("Название сайта во вкладке и в поиске",D.meta,"title"),
+  field("Описание для поисковиков",D.meta,"description",{area:true,rows:3,hint:"Его показывают Яндекс и Google под ссылкой на сайт. Хватит одного-двух предложений."})]}
+
+function aboutView(){const A=D.about,th=h("div",{class:"th"},A.photo?thumb(A.photo):A.initials||"");
+  return [
+  head("Обо мне"),
+  h("div",{class:"two"},field("Заголовок",A,"title",{side:true}),field("Подпись справа",A,"note")),
+  h("span",{class:"fl"},"Фото"),
+  h("div",{class:"me"},th,h("div",{},
+    h("p",{class:"hint"},A.photo?"Фото стоит в блоке «Обо мне».":"Фото нет, вместо него показываются инициалы на тёмном фоне."),
+    h("div",{class:"tools"},
+      h("label",{class:"btn"},A.photo?"Заменить фото":"Загрузить фото",picker(false,ps=>{drop(A.photo);A.photo=ps[0].src;touch();renderPanel()})),
+      A.photo&&btn("Убрать фото",()=>{drop(A.photo);A.photo="";touch();renderPanel()},{cls:"danger"})))),
+  !A.photo&&h("div",{class:"two"},field("Инициалы",A,"initials"),field("Надпись в углу",A,"tag")),
+  h("h3",{},"Текст"),
+  h("p",{class:"hint"},"Первый абзац на сайте крупнее остальных."),
+  ...A.paragraphs.map((t,i)=>h("div",{class:"li"},h("div",{class:"grow"},h("textarea",{rows:3,value:t,oninput:e=>{A.paragraphs[i]=e.target.value;touch()}})),listTools(A.paragraphs,i))),
+  btn("+ Абзац",()=>{A.paragraphs.push("");touch();renderPanel()},{cls:"add"}),
+  h("h3",{},"Техника и формат"),
+  ...A.kit.map((x,i)=>h("div",{class:"li"},h("div",{class:"grow kv"},
+    h("input",{value:x.k,placeholder:"Камера",oninput:e=>{x.k=e.target.value;touch()}}),
+    h("input",{value:x.v,placeholder:"Canon EOS R50",oninput:e=>{x.v=e.target.value;touch()}})),listTools(A.kit,i))),
+  btn("+ Строка",()=>{A.kit.push({k:"",v:""});touch();renderPanel()},{cls:"add"})]}
+
+function contactsView(){const C=D.contacts;return [
+  head("Контакты"),
+  h("div",{class:"two"},field("Заголовок",C,"title",{side:true}),field("Подпись справа",C,"note")),
+  h("p",{class:"hint"},"Ссылка необязательна. Если она есть, контакт становится кликабельным, например https://t.me/ник или https://vk.com/ник."),
+  ...C.items.map((c,i)=>h("div",{class:"li"},h("div",{class:"grow"},
+    h("div",{class:"kv"},h("input",{value:c.label,placeholder:"Телефон",oninput:e=>{c.label=e.target.value;touch()}}),h("input",{value:c.value,placeholder:"+7 900 000-00-00",oninput:e=>{c.value=e.target.value;touch()}})),
+    h("div",{class:"kv"},h("label",{class:"chk",style:"margin:0"},h("input",{type:"checkbox",checked:!!c.copy,onchange:e=>{c.copy=e.target.checked;touch()}}),"Кнопка «Скопировать»"),
+      h("input",{value:c.url,placeholder:"Ссылка (необязательно)",oninput:e=>{c.url=e.target.value;touch()}}))),listTools(C.items,i))),
+  btn("+ Контакт",()=>{C.items.push({label:"",value:"",url:"",copy:false});touch();renderPanel()},{cls:"add"})]}
+
+function addSection(){
+  const used=new Set([...D.sections.map(s=>s.id),"about","contacts","top"]);let id="razdel",n=2;while(used.has(id))id="razdel-"+n++;
+  const s={id,title:"Новый раздел",lead:"",marquee:false,groups:[{title:"",rows:[{type:"row",photos:[]}]}]};
+  D.sections.push(s);page=s;touch();full();scrollTo(0,0);
+}
+function rmPhotos(x){(x.groups?x.groups:x.rows?[x]:[{rows:[x]}]).forEach(g=>g.rows.forEach(r=>r.photos.forEach(p=>drop(p.src))))}
+const nPhotos=g=>g.rows.reduce((a,r)=>a+r.photos.length,0);
+
+function secView(s){const i=D.sections.indexOf(s);
+  return [
+  head("Раздел",
+    btn("↑ Выше",()=>{mv(D.sections,i,-1);touch();full()},{cls:"sm",off:i===0}),
+    btn("↓ Ниже",()=>{mv(D.sections,i,1);touch();full()},{cls:"sm",off:i===D.sections.length-1}),
+    btn("Удалить раздел",()=>{if(!confirm(`Удалить раздел «${s.title}» со всеми фото?`))return;rmPhotos(s);D.sections.splice(i,1);page="hero";touch();full()},{cls:"sm danger"})),
+  field("Название",s,"title",{side:true,hint:"Видно в меню сайта и крупным заголовком."}),
+  field("Описание",s,"lead",{area:true,rows:2,ph:"Можно оставить пустым"}),
+  check("Показывать фото раздела в ленте на первом экране",s,"marquee"),
+  h("p",{class:"hint"},"Фото можно перетаскивать мышкой между рядами и проектами. Ещё их можно бросить в ряд прямо из папки на компьютере."),
+  ...s.groups.map((g,gi)=>groupView(s,g,gi)),
+  btn("+ Проект (группа фото с подзаголовком)",()=>{s.groups.push({title:"Новый проект",rows:[{type:"row",photos:[]}]});touch();renderPanel()},{cls:"add"})]}
+
+function groupView(s,g,gi){
+  return h("div",{class:"group"},
+    h("div",{class:"group-h"},field("Подзаголовок проекта",g,"title",{ph:"Пусто: фото идут сразу под описанием раздела"}),
+      listTools(s.groups,gi,()=>{if(nPhotos(g)&&!confirm(`Удалить проект «${g.title||"без названия"}» и ${nPhotos(g)} фото в нём?`))return false;rmPhotos(g)})),
+    ...g.rows.map((r,ri)=>rowView(g,r,ri)),
+    btn("+ Ряд",()=>{g.rows.push({type:"row",photos:[]});touch();renderPanel()},{cls:"sm"}));
+}
+
+let drag=null;
+function moveTo(arr,j){if(!drag)return;const {arr:a,i}=drag;drag=null;if(a===arr&&(j===i||j===i+1))return renderPanel();
+  const [p]=a.splice(i,1);if(a===arr&&i<j)j--;arr.splice(j,0,p);touch();renderPanel()}
+
+function rowView(g,r,ri){
+  const feat=r.type!=="row";
+  const strip=h("div",{class:"strip",
+    ondragover:e=>{e.preventDefault();strip.classList.add("over")},
+    ondragleave:e=>{if(!strip.contains(e.relatedTarget))strip.classList.remove("over")},
+    ondrop:async e=>{e.preventDefault();strip.classList.remove("over");
+      if(drag)return moveTo(r.photos,r.photos.length);
+      if(e.dataTransfer.files.length){const ps=await prepMany(e.dataTransfer.files);if(ps.length){r.photos.push(...ps);touch();renderPanel()}}}},
+    ...r.photos.map((p,pi)=>card(r,p,pi,feat)),
+    h("label",{class:"addtile"},h("b",{},"+"),"Добавить фото",h("small",{},"можно несколько сразу"),picker(true,ps=>{r.photos.push(...ps);touch();renderPanel()})));
+  return h("div",{class:"row"},
+    h("div",{class:"row-h"},h("span",{class:"mono"},`Ряд ${ri+1}`),
+      h("select",{onchange:e=>{r.type=e.target.value;touch();renderPanel()}},
+        [["row","Фото в ряд"],["feature","Крупное слева, колонка справа"],["feature-rev","Крупное справа, колонка слева"]].map(([v,t])=>h("option",{value:v,selected:r.type===v},t))),
+      listTools(g.rows,ri,()=>{if(r.photos.length&&!confirm(`Удалить ряд с ${r.photos.length} фото?`))return false;rmPhotos(r)})),
+    strip,
+    feat&&r.photos.length<2&&h("p",{class:"warn"},"Для этой раскладки нужно хотя бы 2 фото. Первое будет крупным."),
+    !feat&&r.photos.length>4&&h("p",{class:"warn"},"Больше 4 фото в одном ряду выглядят мелко. Лучше разбить на два ряда."));
+}
+
+function card(r,p,pi,feat){
+  const c=h("div",{class:"card",draggable:true,
+    ondragstart:e=>{drag={arr:r.photos,i:pi};e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain","");c.classList.add("dragging")},
+    ondragend:()=>{c.classList.remove("dragging");drag=null},
+    ondragover:e=>{if(drag){e.preventDefault();e.stopPropagation();c.classList.add("over")}},
+    ondragleave:()=>c.classList.remove("over"),
+    ondrop:e=>{if(!drag)return;e.preventDefault();e.stopPropagation();moveTo(r.photos,pi)}},
+    h("div",{class:"th"},thumb(p.src)),
+    feat&&pi===0&&h("span",{class:"badge"},"крупное"),
+    pending.has(p.src)&&h("span",{class:"new"},"новое"),
+    h("textarea",{rows:2,value:p.alt,placeholder:"Что на фото (для поиска и незрячих)",oninput:e=>{p.alt=e.target.value;touch()}}),
+    h("div",{class:"tools"},
+      h("span",{class:"tools"},
+        btn("←",()=>{mv(r.photos,pi,-1);touch();renderPanel()},{cls:"sm",off:pi===0,title:"Левее"}),
+        btn("→",()=>{mv(r.photos,pi,1);touch();renderPanel()},{cls:"sm",off:pi===r.photos.length-1,title:"Правее"})),
+      h("span",{class:"tools"},
+        h("label",{class:"btn sm",title:"Заменить фото, подпись останется"},"Заменить",picker(false,ps=>{drop(p.src);p.src=ps[0].src;p.ar=ps[0].ar;touch();renderPanel()})),
+        btn("✕",()=>{if(!confirm("Убрать это фото с сайта?"))return;drop(p.src);r.photos.splice(pi,1);touch();renderPanel()},{cls:"sm danger",title:"Удалить"}))));
+  c.querySelectorAll("textarea,button,label").forEach(x=>x.addEventListener("dragstart",e=>e.preventDefault()));
+  return c;
+}
+
+/* ---------- предпросмотр ---------- */
+const pv=document.getElementById("pv"),pf=document.getElementById("pv-f");let pvReady=false,pvT=0;
+function previewData(){const x=JSON.parse(JSON.stringify(D));
+  x.sections.forEach(s=>s.groups.forEach(g=>g.rows.forEach(r=>r.photos.forEach(p=>{if(local.has(p.src))p.src=local.get(p.src)}))));
+  if(local.has(x.about.photo))x.about.photo=local.get(x.about.photo);return x}
+function sendPreview(){if(pvReady&&!pv.hidden)pf.contentWindow.postMessage({type:"zf-preview",content:previewData()},location.origin)}
+function schedulePreview(){clearTimeout(pvT);pvT=setTimeout(sendPreview,300)}
+function openPreview(){pv.hidden=false;document.body.style.overflow="hidden";if(!pf.src){pvReady=false;pf.src=SITE+"index.html?preview"}else sendPreview()}
+addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.type==="zf-ready"){pvReady=true;sendPreview()}});
+document.getElementById("pv-x").onclick=()=>{pv.hidden=true;document.body.style.overflow=""};
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!pv.hidden)document.getElementById("pv-x").click()});
+
+addEventListener("beforeunload",e=>{if(dirty||saving){e.preventDefault();e.returnValue=""}});
+token?load():loginView();
+</script>
+</body>
+</html>

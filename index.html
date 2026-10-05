@@ -127,89 +127,15 @@ footer{padding-block:56px 40px;color:var(--mute);display:flex;justify-content:sp
 
 </head>
 <body>
+<!-- Всё содержимое берётся из content.json. Править его удобнее через admin.html. -->
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#top">Замировский<span>.</span>фото</a>
-    <nav class="nav mono" aria-label="Разделы">
-      <a href="#predmetka">Предметка</a>
-      <a href="#kommerciya">Коммерция</a>
-      <a href="#avto">Авто</a>
-      <a href="#lyudi">Люди</a>
-      <a href="#about">Обо мне</a>
-      <a href="#contacts">Контакты</a>
-    </nav>
+    <a class="logo" href="#top" id="logo"></a>
+    <nav class="nav mono" aria-label="Разделы" id="nav"></nav>
   </div>
 </header>
 
-<main id="top">
-  <div class="hero wrap">
-    <h1>Роман<span class="l2">Замировский</span></h1>
-    <div class="hero-meta">
-      <p>Фотограф. Предметная, коммерческая и автосъёмка.</p>
-      <span class="mono">Ярославская область</span>
-    </div>
-  </div>
-
-  <div class="marquee" aria-label="Избранные кадры"><div class="track" id="track"></div></div>
-
-  <section id="predmetka" class="wrap">
-    <div class="sec-head"><h2>Предметка</h2><span class="mono" data-count="predmetka"></span></div>
-    <p class="sec-lead">Ювелирные изделия и серебро «Ростовской финифти». Свет, съёмка и ретушь мои. Фабрика использует эти кадры в печатной рекламе.</p>
-    <div data-rows="predmetka"></div>
-  </section>
-
-  <section id="kommerciya" class="wrap">
-    <div class="sec-head"><h2>Коммерция</h2><span class="mono" data-count="kommerciya"></span></div>
-    <p class="sec-lead">Табачная фабрика «Гулбахар Рус». Снимал территорию и корпуса для закрытого печатного журнала компании.</p>
-    <div data-rows="kommerciya"></div>
-  </section>
-
-  <section id="avto" class="wrap">
-    <div class="sec-head"><h2>Авто</h2><span class="mono" data-count="avto"></span></div>
-    <p class="sec-lead">Тюнинг, классика и ралли. Снимаю и в статике, и в движении.</p>
-    <div data-rows="avto"></div>
-  </section>
-
-  <section id="lyudi" class="wrap">
-    <div class="sec-head"><h2>Люди</h2><span class="mono" data-count="lyudi"></span></div>
-    <div class="collage" data-rows="lyudi"></div>
-  </section>
-
-  <section id="about" class="wrap">
-    <div class="sec-head"><h2>Обо мне</h2><span class="mono">фотограф и дизайнер</span></div>
-    <div class="about">
-      <div class="me" id="me">
-        <span class="tag">РОМАН ЗАМИРОВСКИЙ</span>
-        <span class="ini">РЗ</span>
-      </div>
-      <div class="about-text">
-        <p>Я Роман, фотограф и графический дизайнер. Больше всего люблю предметную съёмку, где всё решает свет.</p>
-        <p>Полтора года снимал продукцию «Ростовской финифти»: ювелирные украшения, иконы, клинки, наборы с эмалью. Сам ставил свет, снимал и делал ретушь. Фабрика до сих пор использует эти фотографии в печатной рекламе.</p>
-        <p>Отдельно снимаю мероприятия, ралли и спорт. Работал с моделями.</p>
-        <p>Дизайнерский опыт помогает в съёмке. Ещё на площадке думаю, как кадр ляжет в макет: где будет текст, какой нужен фон и сколько оставить места по краям.</p>
-        <dl class="kit">
-          <div><dt>Камера</dt><dd>Canon EOS R50</dd></div>
-          <div><dt>Объективы</dt><dd>50 мм, 18-45 мм, 75-300 мм</dd></div>
-          <div><dt>Свет</dt><dd>Импульсный и постоянный, штатив</dd></div>
-          <div><dt>Обработка</dt><dd>Lightroom, Photoshop</dd></div>
-          <div><dt>Видео</dt><dd>Съёмка и монтаж</dd></div>
-          <div><dt>Формат</dt><dd>Штат или проекты, переезд при оффере</dd></div>
-        </dl>
-      </div>
-    </div>
-  </section>
-
-  <section id="contacts" class="wrap">
-    <div class="sec-head"><h2>Контакты</h2><span class="mono">отвечаю в течение дня</span></div>
-    <div class="contacts">
-      <div class="c"><span class="mono">Телефон</span><span class="val" id="v-phone">+7 908 028-41-66</span><button type="button" data-copy="v-phone">Скопировать</button></div>
-      <div class="c"><span class="mono">Почта</span><span class="val" id="v-mail">zamirovsky.roman@yandex.ru</span><button type="button" data-copy="v-mail">Скопировать</button></div>
-      <div class="c"><span class="mono">Telegram</span><span class="val"><a href="https://t.me/RomanPHDG" target="_blank" rel="noopener">@RomanPHDG</a></span></div>
-    </div>
-  </section>
-
-  <footer class="wrap mono"><span>© 2026 Роман Замировский</span><span id="total"></span></footer>
-</main>
+<main id="top"></main>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Просмотр кадра">
   <div class="lb-stage"><img id="lb-img" alt=""></div>
@@ -224,86 +150,78 @@ footer{padding-block:56px 40px;color:var(--mute);display:flex;justify-content:sp
 </div>
 
 <script>
-const PHOTOS=[
- {f:"jw-necklace",ar:.667,t:"Колье с финифтью и филигранью"},
- {f:"jw-rowan",ar:1.501,t:"Гарнитур «Рябина»"},
- {f:"jw-fan",ar:1.02,t:"Подвеска с росписью"},
- {f:"jw-cosmos",ar:1.5,t:"Гарнитур «Космос»"},
- {f:"jw-dragonfly",ar:1.5,t:"Брошь «Стрекоза»"},
- {f:"jw-leaves",ar:1.0,t:"Подвеска и серьги с росписью «Листья»"},
- {f:"tea-front",ar:1.42,t:"Чайный набор, серебро и эмаль"},
- {f:"tea-top",ar:1.218,t:"Чайный набор сверху"},
- {f:"tea-detail",ar:.684,t:"Чайник, деталь"},
- {f:"finift-set",ar:1.476,t:"Блюдо и стопки, серебро и эмаль"},
- {f:"gb-road",ar:1.5,t:"Гулбахар Рус, территория"},
- {f:"gb-truck",ar:1.5,t:"Гулбахар Рус, склад и погрузка"},
- {f:"gb-chimney",ar:1.5,t:"Гулбахар Рус, производственный корпус"},
- {f:"gb-long",ar:1.354,t:"Гулбахар Рус, вдоль корпуса"},
- {f:"gb-grass",ar:1.5,t:"Гулбахар Рус, административный корпус"},
- {f:"mustang-side",ar:1.78,t:"Ford Mustang"},
- {f:"mustang-wheel",ar:1.78,t:"Ford Mustang, колесо"},
- {f:"mustang-engine",ar:1.78,t:"Ford Mustang, подкапотное"},
- {f:"retro-front",ar:1.78,t:"ВАЗ-2106, зона ретро"},
- {f:"retro-lights",ar:.562,t:"ВАЗ-2106, фары"},
- {f:"retro-low",ar:.562,t:"ВАЗ-2106, нижний ракурс"},
- {f:"retro-radio",ar:.562,t:"Магнитофон VEF Sigma"},
- {f:"lincoln",ar:1.78,t:"Lincoln"},
- {f:"rally-vaz",ar:1.5,t:"Ралли, ВАЗ в прыжке"},
- {f:"rally-team44",ar:1.555,t:"Ралли, Lada Samara в прыжке"},
- {f:"rally-subaru",ar:1,t:"Ралли, Subaru Impreza"},
- {f:"rally-mitsu",ar:1,t:"Зимнее ралли, Mitsubishi Lancer"},
- {f:"portrait-book",ar:.619,t:"Постановочный портрет в библиотеке"},
- {f:"portrait-cart",ar:.667,t:"Портрет"},
- {f:"portrait-street",ar:.667,t:"Портрет на улице"},
- {f:"portrait-bw",ar:1.5,t:"Чёрно-белый портрет"}
-];
-const ROWS={
- predmetka:[
-  {t:"Украшения",rows:[{feature:"jw-necklace",side:["jw-rowan","jw-fan"]},{feature:"jw-leaves",side:["jw-cosmos","jw-dragonfly"],rev:1}]},
-  {t:"Чайный набор",rows:[["tea-front"],["tea-top","tea-detail"]]},
-  {t:"Эмаль и роспись",rows:[["finift-set"]]}
- ],
- avto:[
-  {t:"Ford Mustang",rows:[["mustang-side"],["mustang-wheel","mustang-engine"]]},
-  {t:"ВАЗ-2106 · зона ретро",rows:[["retro-front"],["retro-lights","retro-low","retro-radio"]]},
-  {t:"Lincoln",rows:[["lincoln"]]},
-  {t:"Ралли",rows:[["rally-vaz"],["rally-team44","rally-subaru","rally-mitsu"]]}
- ],
- kommerciya:[
-  {t:"Гулбахар Рус · производство",rows:[["gb-road"],["gb-truck","gb-chimney"],["gb-long","gb-grass"]]}
- ],
- lyudi:[["portrait-book","portrait-cart","portrait-street","portrait-bw"]]
-};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const br=s=>esc(s).replace(/\n/g,"<br>");
 const word=n=>{const a=n%10,b=n%100;return (a===1&&b!==11)?"кадр":(a>=2&&a<=4&&(b<12||b>14))?"кадра":"кадров"};
-const idx=f=>PHOTOS.findIndex(p=>p.f===f);
-const one=(f,eager)=>{const i=idx(f),p=PHOTOS[i];return `<figure class="frame" style="--ar:${p.ar}" data-i="${i}" tabindex="0"><img src="img/${f}.jpg" alt="${p.t}"${eager?"":` loading="lazy"`} width="1600" height="${Math.round(1600/p.ar)}"></figure>`};
-const flatRow=x=>Array.isArray(x)?x:x.r?x.r:[x.feature,...x.side];
-const rowsHTML=(rows,eager)=>rows.map(row=>{
-  if(row.feature){const fa=PHOTOS[idx(row.feature)].ar,sum=row.side.reduce((a,f)=>a+1/PHOTOS[idx(f)].ar,0);
-    const k=(fa*sum).toFixed(3),side=`<div class="side">${row.side.map(f=>one(f)).join("")}</div>`;
-    return row.rev?`<div class="crow feature" style="grid-template-columns:1fr ${k}fr">${side}${one(row.feature)}</div>`:`<div class="crow feature" style="grid-template-columns:${k}fr 1fr">${one(row.feature)}${side}</div>`;}
-  const r=Array.isArray(row)?row:row.r;return `<div class="crow${r.length>2?" three":""}${row.small?" small":""}${r.length===1&&PHOTOS[idx(r[0])].ar<1.3?" narrow":""}">`+r.map(f=>{const i=idx(f),p=PHOTOS[i];
-  return `<figure class="frame" style="--ar:${p.ar}" data-i="${i}" tabindex="0"><img src="img/${f}.jpg" alt="${p.t}"${eager?"":` loading="lazy"`} width="1600" height="${Math.round(1600/p.ar)}"></figure>`}).join("")+`</div>`}).join("");
-document.querySelectorAll("[data-rows]").forEach(box=>{
-  const key=box.dataset.rows,data=ROWS[key];let n=0;
-  if(data[0].t){
-    box.innerHTML=data.map(g=>{const c=g.rows.map(flatRow).flat().length;n+=c;return `<div class="proj"><h3>${g.t}</h3><span class="mono">${c} ${word(c)}</span></div><div class="collage">${rowsHTML(g.rows)}</div>`}).join("");
-  }else{box.classList.add("collage");box.innerHTML=rowsHTML(data,key==="hero");n=data.flat().length;}
-  const cnt=document.querySelector(`[data-count="${key}"]`);
-  if(cnt)cnt.textContent=`${n} ${word(n)}`;
-});
-{const order=["predmetka","kommerciya","avto"].flatMap(k=>ROWS[k].flatMap(g=>g.rows.map(flatRow).flat()));
- const h=420,w=order.reduce((a,f)=>a+PHOTOS[idx(f)].ar*h,0);
- const fig=(f,dup)=>{const i=idx(f),p=PHOTOS[i];return `<figure class="frame" data-i="${i}"${dup?' aria-hidden="true"':' tabindex="0"'}><img src="img/${f}.jpg" alt="${dup?"":p.t}" width="${Math.round(1600)}" height="${Math.round(1600/p.ar)}"></figure>`};
- const tr=document.getElementById("track");tr.innerHTML=order.map(f=>fig(f)).join("")+order.map(f=>fig(f,1)).join("");
- tr.style.setProperty("--dur",Math.round(w/70)+"s");}
-document.getElementById("total").textContent=`${PHOTOS.length} ${word(PHOTOS.length)}`;
+const main=document.getElementById("top");
+let PH=[],io=null;
+
+function render(D){
+  /* сквозная нумерация кадров для просмотра */
+  const num=new Map();PH=[];
+  D.sections.forEach(s=>s.groups.forEach(g=>g.rows.forEach(r=>r.photos.forEach(p=>{num.set(p,PH.length);PH.push(p)}))));
+  const ar=p=>+p.ar||1.5;
+  const img=(p,lazy)=>`<img src="${esc(p.src)}" alt="${esc(p.alt)}"${lazy?' loading="lazy"':""} width="1600" height="${Math.round(1600/ar(p))}">`;
+  const frame=p=>`<figure class="frame" style="--ar:${ar(p)}" data-i="${num.get(p)}" tabindex="0">${img(p,1)}</figure>`;
+  const row=r=>{const ps=r.photos;if(!ps.length)return "";
+    if((r.type==="feature"||r.type==="feature-rev")&&ps.length>1){
+      const [f,...side]=ps,k=(ar(f)*side.reduce((a,p)=>a+1/ar(p),0)).toFixed(3),sd=`<div class="side">${side.map(frame).join("")}</div>`;
+      return r.type==="feature-rev"?`<div class="crow feature" style="grid-template-columns:1fr ${k}fr">${sd}${frame(f)}</div>`:`<div class="crow feature" style="grid-template-columns:${k}fr 1fr">${frame(f)}${sd}</div>`;}
+    return `<div class="crow${ps.length>2?" three":""}${ps.length===1&&ar(ps[0])<1.3?" narrow":""}">${ps.map(frame).join("")}</div>`};
+  const cnt=g=>g.rows.reduce((a,r)=>a+r.photos.length,0);
+
+  document.title=D.meta.title;
+  document.querySelector('meta[name="description"]').content=D.meta.description;
+  document.getElementById("logo").innerHTML=`${esc(D.logo[0])}<span>.</span>${esc(D.logo[1])}`;
+  document.getElementById("nav").innerHTML=[...D.sections.map(s=>[s.id,s.title]),["about",D.about.title],["contacts",D.contacts.title]]
+    .map(([id,t])=>`<a href="#${esc(id)}">${esc(t)}</a>`).join("");
+
+  const strip=D.sections.filter(s=>s.marquee).flatMap(s=>s.groups.flatMap(g=>g.rows.flatMap(r=>r.photos)));
+  const fig=(p,dup)=>`<figure class="frame" data-i="${num.get(p)}"${dup?' aria-hidden="true"':' tabindex="0"'}><img src="${esc(p.src)}" alt="${dup?"":esc(p.alt)}" width="1600" height="${Math.round(1600/ar(p))}"></figure>`;
+  const dur=Math.round(strip.reduce((a,p)=>a+ar(p)*420,0)/70);
+
+  const A=D.about,C=D.contacts;
+  main.innerHTML=`
+  <div class="hero wrap">
+    <h1>${esc(D.hero.line1)}<span class="l2">${esc(D.hero.line2)}</span></h1>
+    <div class="hero-meta"><p>${br(D.hero.text)}</p><span class="mono">${esc(D.hero.place)}</span></div>
+  </div>
+  ${strip.length?`<div class="marquee" aria-label="Избранные кадры"><div class="track" style="--dur:${dur}s">${strip.map(p=>fig(p)).join("")+strip.map(p=>fig(p,1)).join("")}</div></div>`:""}
+  ${D.sections.map(s=>{const n=s.groups.reduce((a,g)=>a+cnt(g),0);
+    return `<section id="${esc(s.id)}" class="wrap">
+    <div class="sec-head"><h2>${esc(s.title)}</h2><span class="mono">${n} ${word(n)}</span></div>
+    ${s.lead?`<p class="sec-lead">${br(s.lead)}</p>`:""}
+    <div>${s.groups.map(g=>{const c=cnt(g);
+      return (g.title?`<div class="proj"><h3>${esc(g.title)}</h3><span class="mono">${c} ${word(c)}</span></div>`:"")+`<div class="collage">${g.rows.map(row).join("")}</div>`}).join("")}</div>
+  </section>`}).join("")}
+  <section id="about" class="wrap">
+    <div class="sec-head"><h2>${esc(A.title)}</h2><span class="mono">${esc(A.note)}</span></div>
+    <div class="about">
+      <div class="me">${A.photo?`<img src="${esc(A.photo)}" alt="${esc(A.tag)}">`:`<span class="tag">${esc(A.tag)}</span><span class="ini">${esc(A.initials)}</span>`}</div>
+      <div class="about-text">
+        ${A.paragraphs.filter(Boolean).map(p=>`<p>${br(p)}</p>`).join("")}
+        ${A.kit.length?`<dl class="kit">${A.kit.map(x=>`<div><dt>${esc(x.k)}</dt><dd>${esc(x.v)}</dd></div>`).join("")}</dl>`:""}
+      </div>
+    </div>
+  </section>
+  <section id="contacts" class="wrap">
+    <div class="sec-head"><h2>${esc(C.title)}</h2><span class="mono">${esc(C.note)}</span></div>
+    <div class="contacts">${C.items.map((c,i)=>`<div class="c"><span class="mono">${esc(c.label)}</span><span class="val" id="v-${i}">${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.value)}</a>`:esc(c.value)}</span>${c.copy?`<button type="button" data-copy="v-${i}">Скопировать</button>`:""}</div>`).join("")}</div>
+  </section>
+  <footer class="wrap mono"><span>${esc(D.footer)}</span><span>${PH.length} ${word(PH.length)}</span></footer>`;
+
+  /* подсветка раздела в меню */
+  const links=[...document.querySelectorAll(".nav a")];
+  if(io)io.disconnect();
+  io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
+  document.querySelectorAll("section[id]").forEach(s=>io.observe(s));
+}
 
 /* просмотр */
 const lb=document.getElementById("lb"),im=document.getElementById("lb-img");
 let cur=0,last=null;
-function show(i){cur=(i+PHOTOS.length)%PHOTOS.length;const p=PHOTOS[cur];im.src=`img/${p.f}.jpg`;im.alt=p.t;
-  document.getElementById("lb-n").textContent=`${cur+1} / ${PHOTOS.length}`;}
+function show(i){cur=(i+PH.length)%PH.length;const p=PH[cur];im.src=p.src;im.alt=p.alt||"";
+  document.getElementById("lb-n").textContent=`${cur+1} / ${PH.length}`;}
 function open(i){last=document.activeElement;show(i);lb.hidden=false;document.body.style.overflow="hidden";document.getElementById("lb-x").focus();}
 function close(){lb.hidden=true;document.body.style.overflow="";if(last)last.focus();}
 document.addEventListener("click",e=>{const f=e.target.closest("[data-i]");if(f&&!f.closest(".lb"))open(+f.dataset.i);});
@@ -316,18 +234,22 @@ document.getElementById("lb-prev").onclick=()=>show(cur-1);
 lb.addEventListener("click",e=>{if(e.target===lb||e.target.classList.contains("lb-stage"))close();});
 
 /* копирование */
-document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>{
+document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(!b)return;
   const el=document.getElementById(b.dataset.copy),txt=el.textContent.trim();
   const done=()=>{b.textContent="Скопировано";setTimeout(()=>b.textContent="Скопировать",1600)};
   const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Выделено, нажми Ctrl+C"};
   try{navigator.clipboard.writeText(txt).then(done,sel)}catch(_){sel()}
-}));
+});
 
-/* подсветка раздела в меню */
-const links=[...document.querySelectorAll(".nav a")];
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
-document.querySelectorAll("section[id]").forEach(s=>io.observe(s));
+/* загрузка: обычный режим берёт content.json, предпросмотр из админки получает данные сообщением */
+if(new URLSearchParams(location.search).has("preview")){
+  addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.type==="zf-preview")render(e.data.content)});
+  parent.postMessage({type:"zf-ready"},location.origin);
+}else{
+  fetch("content.json",{cache:"no-cache"}).then(r=>r.json()).then(D=>{render(D);
+    if(location.hash){const t=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(t)t.scrollIntoView();}
+  }).catch(()=>{main.innerHTML='<p class="wrap" style="padding-block:48px">Не получилось загрузить страницу. Обновите её.</p>'});
+}
 </script>
-
 </body>
 </html>
